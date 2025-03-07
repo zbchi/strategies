@@ -1,0 +1,34 @@
+{
+  "strategy_name": "GeneTrader",
+  "params": {
+    "roi": {
+      "0": 1
+    },
+    "stoploss": {
+      "stoploss": -0.25
+    },
+    "trailing": {
+      "trailing_stop": true,
+      "trailing_stop_positive": 0.003,
+      "trailing_stop_positive_offset": 0.03,
+      "trailing_only_offset_is_reached": true
+    },
+    "max_open_trades": {
+      "max_open_trades": 6
+    },
+    "buy": {
+      "buy_cti_32": 0.529,
+      "buy_rsi_32": 18,
+      "buy_rsi_fast_32": 52,
+      "buy_sma15_32": 0.951
+    },
+    "sell": {
+      "sell_fastx": 73,
+      "sell_loss_cci": 264,
+      "sell_loss_cci_profit": -0.034
+    },
+    "protection": {}
+  },
+  "ft_stratparam_v": 1,
+  "export_time": "2025-03-02 04:05:54.221706+00:00"
+}
