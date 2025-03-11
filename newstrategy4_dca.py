@@ -193,7 +193,7 @@ class newstrategy4(IStrategy):
     END HYPEROPT
     """
 
-    timeframe = '5m'
+    timeframe = '15m'
 
     # Make sure these match or are not overridden in config
     use_exit_signal = True
@@ -210,9 +210,9 @@ class newstrategy4(IStrategy):
     order_types = {
         'entry': 'market',
         'exit': 'market',
-        'emergencyexit': 'market',
-        'forceentry': "market",
-        'forceexit': 'market',
+        'emergency_exit': 'market',
+        'force_entry': "market",
+        'force_exit': 'market',
         'stoploss': 'market',
         'stoploss_on_exchange': False,
 
