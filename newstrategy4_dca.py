@@ -341,6 +341,8 @@ class newstrategy4(IStrategy):
     def informative_pairs(self):
         pairs = self.dp.current_whitelist()
         informative_pairs = [(pair, '1h') for pair in pairs]
+        informative_pairs.append(("BTC/USDT", "5m"))
+        informative_pairs.append(("BTC/USDT", "1h"))
         return informative_pairs
     
     
@@ -453,6 +455,8 @@ class newstrategy4(IStrategy):
         inf_tf = '5m'
         informative = self.dp.get_pair_dataframe('BTC/USDT', timeframe=inf_tf)
         informative_btc = informative.copy().shift(1)
+        informative_btc = informative_btc.reindex(dataframe.index)
+
 
         dataframe['btc_close'] = informative_btc['close']
         dataframe['btc_ema_fast'] = ta.EMA(informative_btc, timeperiod=20)
