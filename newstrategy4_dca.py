@@ -635,9 +635,17 @@ class newstrategy4(IStrategy):
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         
+        dataframe['drop_pct'] = (dataframe['close'] - dataframe['open']) / dataframe['open'] * 100
+        
+        dataframe['drop_flag'] = (
+        dataframe['drop_pct']
+        .rolling(window=30)
+        .apply(lambda x: (x < -10).any(), raw=True)
+        ).fillna(0)
 
         dataframe.loc[
-                ((dataframe[f'rmi_length_{self.buy_rmi_length.value}'] < self.buy_rmi.value) &
+                ((dataframe['drop_flag'] == 0)&
+                (dataframe[f'rmi_length_{self.buy_rmi_length.value}'] < self.buy_rmi.value) &
                 (dataframe[f'cci_length_{self.buy_cci_length.value}'] <= self.buy_cci.value) &
                 (dataframe['srsi_fk'] < self.buy_srsi_fk.value) &
                 (dataframe['bb_delta'] > self.buy_bb_delta.value) &
@@ -651,7 +659,8 @@ class newstrategy4(IStrategy):
 
         dataframe.loc[
 
-                ((dataframe['bb_delta'] > self.buy_bb_delta.value) &
+                ((dataframe['drop_flag'] == 0)&
+                (dataframe['bb_delta'] > self.buy_bb_delta.value) &
                 (dataframe['bb_width'] > self.buy_bb_width.value) &
                 (dataframe['closedelta'] > dataframe['close'] * self.buy_closedelta.value / 1000 ) &    # from BinH
                 (dataframe['close'] < dataframe['bb_lowerband3'] * self.buy_bb_factor.value)&
@@ -668,7 +677,8 @@ class newstrategy4(IStrategy):
         
         dataframe.loc[
                         
-                    ((dataframe['rocr_1h'] > self.buy_clucha_rocr_1h.value ) &
+                    ((dataframe['drop_flag'] == 0)&
+                        (dataframe['rocr_1h'] > self.buy_clucha_rocr_1h.value ) &
                 
                         (dataframe['bb_lowerband2_40'].shift() > 0) &
                         (dataframe['bb_delta_cluc'] > dataframe['ha_close'] * self.buy_clucha_bbdelta_close.value) &
@@ -683,7 +693,8 @@ class newstrategy4(IStrategy):
         
          
         dataframe.loc[    
-                ((dataframe['ema_200'] > (dataframe['ema_200'].shift(12) * 1.01)) &
+                ((dataframe['drop_flag'] == 0)&
+                (dataframe['ema_200'] > (dataframe['ema_200'].shift(12) * 1.01)) &
                 (dataframe['ema_200'] > (dataframe['ema_200'].shift(48) * 1.07)) &
                 (dataframe['bb_lowerband2_40'].shift().gt(0)) &
                 (dataframe['bb_delta_cluc'].gt(dataframe['close'] * 0.056)) &
@@ -697,7 +708,8 @@ class newstrategy4(IStrategy):
         ['enter_long', 'enter_tag']] = (1, 'NFIX39')
         
         dataframe.loc[
-                ((dataframe['close'] > (dataframe['sup_level_1h'] * 0.72)) &
+                ((dataframe['drop_flag'] == 0)&
+                (dataframe['close'] > (dataframe['sup_level_1h'] * 0.72)) &
                 (dataframe['close'] < (dataframe['ema_16'] * 0.982)) &
                 (dataframe['EWO'] < -10.0) &
                 (dataframe['cti'] < -0.9)
@@ -706,7 +718,8 @@ class newstrategy4(IStrategy):
         ['enter_long', 'enter_tag']] = (1, 'NFIX29')
         
         dataframe.loc[
-                ((dataframe['ema_26'] > dataframe['ema_12']) &
+                ((dataframe['drop_flag'] == 0)&
+                (dataframe['ema_26'] > dataframe['ema_12']) &
                 (dataframe['ema_26'] - dataframe['ema_12'] > dataframe['open'] * self.buy_ema_diff.value) &
                 (dataframe['ema_26'].shift() - dataframe['ema_12'].shift() > dataframe['open'] / 100) &
                 (dataframe['close'] < dataframe['bb_lowerband2'] * self.buy_bb_factor.value) &
@@ -717,7 +730,7 @@ class newstrategy4(IStrategy):
         
         dataframe.loc[
                 (
-                
+                (dataframe['drop_flag'] == 0)&
                 (dataframe['close'] < dataframe['vwap_low']) &
                 (dataframe['tcp_percent_4'] > 0.053) & # 0.053)
                 (dataframe['cti'] < -0.8) & # -0.8)
@@ -730,7 +743,8 @@ class newstrategy4(IStrategy):
         ['enter_long', 'enter_tag']] = (1, 'vwap')
         
         dataframe.loc[
-                ((dataframe['bb_width_1h'] > 0.131) &
+                ((dataframe['drop_flag'] == 0)&
+                (dataframe['bb_width_1h'] > 0.131) &
                 (dataframe['r_14'] < -51) &
                 (dataframe['r_84_1h'] < -70) &
                 (dataframe['cti'] < -0.845) &
@@ -742,7 +756,8 @@ class newstrategy4(IStrategy):
         ['enter_long', 'enter_tag']] = (1, 'insta_signal') 
 
         dataframe.loc[
-            ((dataframe['close'] < (dataframe['ema_16'] * self.buy_44_ma_offset))&
+            ((dataframe['drop_flag'] == 0)&
+            (dataframe['close'] < (dataframe['ema_16'] * self.buy_44_ma_offset))&
             (dataframe['ewo'] < self.buy_44_ewo)&
             (dataframe['cti'] < self.buy_44_cti)&
             (dataframe['r_480_1h'] < self.buy_44_r_1h)&
@@ -752,7 +767,8 @@ class newstrategy4(IStrategy):
 
 
         dataframe.loc[  
-            ((dataframe['pm'] > dataframe['pmax_thresh'])&
+            ((dataframe['drop_flag'] == 0)&
+            (dataframe['pm'] > dataframe['pmax_thresh'])&
             (dataframe['close'] < dataframe['sma_75'] * self.buy_37_ma_offset)&
             (dataframe['ewo'] > self.buy_37_ewo)&
             (dataframe['rsi'] < self.buy_37_rsi)&
@@ -762,7 +778,8 @@ class newstrategy4(IStrategy):
         ['enter_long', 'enter_tag']] = (1, 'NFINext37')   
 
         dataframe.loc[ 
-            ((dataframe['ema_26'] > dataframe['ema_12'])&
+            ((dataframe['drop_flag'] == 0)&
+            (dataframe['ema_26'] > dataframe['ema_12'])&
             ((dataframe['ema_26'] - dataframe['ema_12']) > (dataframe['open'] * self.buy_ema_open_mult_7))&
             ((dataframe['ema_26'].shift() - dataframe['ema_12'].shift()) > (dataframe['open'] / 100))&
             (dataframe['cti'] < self.buy_cti_7)      
