@@ -804,6 +804,8 @@ class newstrategy4(IStrategy):
 
         return dataframe
     
+    def leverage(self, pair: str, current_time: datetime, current_rate: float, proposed_leverage: float) -> float:
+    return 2.0
 
     
    
