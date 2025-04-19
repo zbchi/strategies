@@ -341,6 +341,9 @@ class newstrategy4(IStrategy):
     def informative_pairs(self):
         pairs = self.dp.current_whitelist()
         informative_pairs = [(pair, '1h') for pair in pairs]
+
+        informative_pairs.append(("BTC/USDT","15m"))
+        informative_pairs.append(("BTC/USDT","1h"))
         return informative_pairs
     
     
