@@ -342,7 +342,7 @@ class newstrategy4(IStrategy):
         pairs = self.dp.current_whitelist()
         informative_pairs = [(pair, '1h') for pair in pairs]
 
-        informative_pairs.append(("BTC/USDT","5m"))
+        informative_pairs.append(("BTC/USDT","15m"))
         informative_pairs.append(("BTC/USDT","1h"))
         return informative_pairs
     
@@ -453,7 +453,7 @@ class newstrategy4(IStrategy):
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         
         
-        inf_tf = '5m'
+        inf_tf = '15m'
         informative = self.dp.get_pair_dataframe('BTC/USDT', timeframe=inf_tf)
         informative_btc = informative.copy().shift(1)
 
