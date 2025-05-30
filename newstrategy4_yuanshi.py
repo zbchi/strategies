@@ -631,13 +631,13 @@ class newstrategy4_5m(IStrategy):
         
         dataframe['hma_50'] = qtpylib.hull_moving_average(dataframe['close'], window=50)
         
-
+        dataframe['amplitude_pct'] = (dataframe['high'] - dataframe['low']) / dataframe['low'] * 100
+        
         dataframe = merge_informative_pair(dataframe, informative, self.timeframe, inf_tf, ffill=True)
 
         return dataframe
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        dataframe['amplitude_pct'] = (dataframe['high'] - dataframe['low']) / dataframe['low'] * 100
         
         dataframe['amplitude_flag'] = (
             dataframe['amplitude_pct']
